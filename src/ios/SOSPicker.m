@@ -172,8 +172,9 @@ typedef enum : NSUInteger {
     NSString* filePath;
     CDVPluginResult* result = nil;
 
-    for (GMFetchItem *item in fetchArray) {
-
+    for (NSDictionary *dict in fetchArray) {
+        GMFetchItem *item = [dict objectForKey:@"item"];
+        PHAsset *asset = [dict objectForKey:@"asset"];
         if ( !item.image_fullsize ) {
             continue;
         }
@@ -181,17 +182,24 @@ typedef enum : NSUInteger {
         do {
             filePath = [NSString stringWithFormat:@"%@/%@%03d.%@", docsPath, CDV_PHOTO_PREFIX, i++, @"jpg"];
         } while ([fileMgr fileExistsAtPath:filePath]);
+        
+        NSMutableDictionary *resultItem = [[NSMutableDictionary alloc] init];
+        long long timestamp = [asset.creationDate timeIntervalSince1970] * 1000;
+        NSString *created_date = [NSString stringWithFormat:@"%lld", timestamp];
+        [resultItem setValue:created_date forKey:@"created_date"];
+        
+        NSString *imageData = nil;
 
         NSData* data = nil;
         if (self.width == 0 && self.height == 0) {
             // no scaling required
             if (self.outputType == BASE64_STRING){
                 UIImage* image = [UIImage imageNamed:item.image_fullsize];
-                [result_all addObject:[UIImageJPEGRepresentation(image, self.quality/100.0f) base64EncodedStringWithOptions:0]];
+                imageData = [UIImageJPEGRepresentation(image, self.quality/100.0f) base64EncodedStringWithOptions:0];
             } else {
                 if (self.quality == 100) {
                     // no scaling, no downsampling, this is the fastest option
-                    [result_all addObject:item.image_fullsize];
+                    imageData = item.image_fullsize;
                 } else {
                     // resample first
                     UIImage* image = [UIImage imageNamed:item.image_fullsize];
@@ -200,7 +208,7 @@ typedef enum : NSUInteger {
                         result = [CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsString:[err localizedDescription]];
                         break;
                     } else {
-                        [result_all addObject:[[NSURL fileURLWithPath:filePath] absoluteString]];
+                        imageData = [[NSURL fileURLWithPath:filePath] absoluteString];
                     }
                 }
             }
@@ -215,12 +223,15 @@ typedef enum : NSUInteger {
                 break;
             } else {
                 if(self.outputType == BASE64_STRING){
-                    [result_all addObject:[data base64EncodedStringWithOptions:0]];
+                    imageData = [data base64EncodedStringWithOptions:0];
                 } else {
-                    [result_all addObject:[[NSURL fileURLWithPath:filePath] absoluteString]];
+                    imageData = [[NSURL fileURLWithPath:filePath] absoluteString];
                 }
             }
         }
+        
+        [resultItem setValue:imageData forKey:@"image"];
+        [result_all addObject:resultItem];
     }
 
     if (result == nil) {

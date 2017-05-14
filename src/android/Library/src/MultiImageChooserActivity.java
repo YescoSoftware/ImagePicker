@@ -3,25 +3,25 @@
  *
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following  conditions are met:
  *
- *   Redistributions of source code must retain the above copyright notice, 
+ *   Redistributions of source code must retain the above copyright notice,
  *      this list of conditions and the following disclaimer.
- *   Redistributions in binary form must reproduce the above copyright notice, 
- *      this list of conditions and the following  disclaimer in the 
+ *   Redistributions in binary form must reproduce the above copyright notice,
+ *      this list of conditions and the following  disclaimer in the
  *      documentation and/or other materials provided with the distribution.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT  SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDIN G NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT  SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDIN G NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH  DAMAGE
  *
  * Code modified by Andrew Stephan for Sync OnSet
@@ -505,13 +505,13 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
         }
     }
 
-    private class ResizeImagesTask extends AsyncTask<Set<Entry<String, Integer>>, Void, ArrayList<String>> {
+    private class ResizeImagesTask extends AsyncTask<Set<Entry<String, Integer>>, Void, ArrayList<HashMap<String, String>>> {
         private Exception asyncTaskError = null;
 
         @Override
-        protected ArrayList<String> doInBackground(Set<Entry<String, Integer>>... fileSets) {
+        protected ArrayList<HashMap<String, String>> doInBackground(Set<Entry<String, Integer>>... fileSets) {
             Set<Entry<String, Integer>> fileNames = fileSets[0];
-            ArrayList<String> al = new ArrayList<String>();
+            ArrayList<HashMap<String, String>> al = new ArrayList<HashMap<String, String>>();
             try {
                 Iterator<Entry<String, Integer>> i = fileNames.iterator();
                 Bitmap bmp;
@@ -566,33 +566,34 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
                         }
                     }
 
+                    HashMap<String, String> item = new HashMap<String, String>();
+                    item.put("created_date", String.valueOf(file.lastModified()));
                     if (outputType == OutputType.FILE_URI) {
-                        al.add(Uri.fromFile(file).toString());
                         file = storeImage(bmp, file.getName());
-                        al.add(Uri.fromFile(file).toString());
-
+                        item.put("image", Uri.fromFile(file).toString());
                     } else if (outputType == OutputType.BASE64_STRING) {
-                        al.add(getBase64OfImage(bmp));
+                        item.put("image", getBase64OfImage(bmp));
                     }
+                    al.add(item);
                 }
                 return al;
             } catch (IOException e) {
                 try {
                     asyncTaskError = e;
                     for (int i = 0; i < al.size(); i++) {
-                        URI uri = new URI(al.get(i));
+                        URI uri = new URI((String)al.get(i).get("image"));
                         File file = new File(uri);
                         file.delete();
                     }
                 } catch (Exception ignore) {
                 }
 
-                return new ArrayList<String>();
+                return new ArrayList<HashMap<String, String>>();
             }
         }
 
         @Override
-        protected void onPostExecute(ArrayList<String> al) {
+        protected void onPostExecute(ArrayList<HashMap<String, String>> al) {
             Intent data = new Intent();
 
             if (asyncTaskError != null) {
@@ -603,7 +604,7 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
 
             } else if (al.size() > 0) {
                 Bundle res = new Bundle();
-                res.putStringArrayList("MULTIPLEFILENAMES", al);
+                res.putSerializable("MULTIPLEFILENAMES", al);
 
                 if (imagecursor != null) {
                     res.putInt("TOTALFILES", imagecursor.getCount());

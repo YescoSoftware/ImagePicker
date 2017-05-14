@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -122,10 +123,9 @@ public class ImagePicker extends CordovaPlugin {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && data != null) {
-            ArrayList<String> fileNames = data.getStringArrayListExtra("MULTIPLEFILENAMES");
-            JSONArray res = new JSONArray(fileNames);
+            ArrayList<HashMap<String, String>> images = (ArrayList<HashMap<String, String>>)data.getSerializableExtra("MULTIPLEFILENAMES");
+            JSONArray res = new JSONArray(images);
             callbackContext.success(res);
-
         } else if (resultCode == Activity.RESULT_CANCELED && data != null) {
             String error = data.getStringExtra("ERRORMESSAGE");
             callbackContext.error(error);

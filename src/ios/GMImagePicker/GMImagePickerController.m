@@ -144,9 +144,17 @@
 
 - (void)finishPickingAssets:(id)sender
 {
+    NSMutableArray<NSDictionary*> *results = [[NSMutableArray alloc] initWithCapacity:self.selectedAssets.count];
+    
+    for (int i = 0; i < self.selectedAssets.count; i++) {
+        NSDictionary *dict = @{
+                               @"asset" : self.selectedAssets[i],
+                               @"item" : self.selectedFetches[i]
+                               };
+        [results addObject:dict];
+    }
     if ([self.delegate respondsToSelector:@selector(assetsPickerController:didFinishPickingAssets:)])
-        //[self.delegate assetsPickerController:self didFinishPickingAssets:self.selectedAssets];
-        [self.delegate assetsPickerController:self didFinishPickingAssets:self.selectedFetches];
+        [self.delegate assetsPickerController:self didFinishPickingAssets:results];
     
     //[self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
