@@ -567,6 +567,7 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
                     }
 
                     if (outputType == OutputType.FILE_URI) {
+                        al.add(Uri.fromFile(file).toString());
                         file = storeImage(bmp, file.getName());
                         al.add(Uri.fromFile(file).toString());
 
