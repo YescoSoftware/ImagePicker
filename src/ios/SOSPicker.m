@@ -184,9 +184,17 @@ typedef enum : NSUInteger {
         } while ([fileMgr fileExistsAtPath:filePath]);
         
         NSMutableDictionary *resultItem = [[NSMutableDictionary alloc] init];
+        
+        // get creation date of the photo and set in the result
         long long timestamp = [asset.creationDate timeIntervalSince1970] * 1000;
         NSString *created_date = [NSString stringWithFormat:@"%lld", timestamp];
         [resultItem setValue:created_date forKey:@"created_date"];
+        
+        // get location data of the photo and set in the result
+        NSString *latitude = [NSString stringWithFormat:@"%f", asset.location.coordinate.latitude];
+        NSString *longitude = [NSString stringWithFormat:@"%f", asset.location.coordinate.longitude];
+        [resultItem setValue:latitude forKey:@"latitude"];
+        [resultItem setValue:longitude forKey:@"longitude"];
         
         NSString *imageData = nil;
 
