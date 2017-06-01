@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  id="com.synconset.imagepicker"
-  version="2.1.7">
+  id="com.toshyodev.imagepicker"
+  version="1.0.0">
 
     <name>ImagePicker</name>
 
@@ -92,12 +92,12 @@
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="ImagePicker">
-                <param name="android-package" value="com.synconset.ImagePicker"/>
+                <param name="android-package" value="com.toshyodev.ImagePicker"/>
             </feature>
         </config-file>
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
-            <activity android:label="@string/multi_app_name" android:name="com.synconset.MultiImageChooserActivity" android:theme="@style/Theme.AppCompat.Light">
+            <activity android:label="@string/multi_app_name" android:name="com.toshyodev.MultiImageChooserActivity" android:theme="@style/Theme.AppCompat.Light">
             </activity>
         </config-file>
 
@@ -107,11 +107,11 @@
 
         <framework src="com.android.support:appcompat-v7:23+" />
 
-        <source-file src="src/android/com/synconset/ImagePicker/ImagePicker.java" target-dir="src/com/synconset" />
-        <source-file src="src/android/com/synconset/ImagePicker/FakeR.java" target-dir="src/com/synconset" />
+        <source-file src="src/android/com/toshyodev/ImagePicker/ImagePicker.java" target-dir="src/com/toshyodev" />
+        <source-file src="src/android/com/toshyodev/ImagePicker/FakeR.java" target-dir="src/com/toshyodev" />
 
-        <source-file src="src/android/Library/src/ImageFetcher.java" target-dir="src/com/synconset"/>
-        <source-file src="src/android/Library/src/MultiImageChooserActivity.java" target-dir="src/com/synconset"/>
+        <source-file src="src/android/Library/src/ImageFetcher.java" target-dir="src/com/toshyodev"/>
+        <source-file src="src/android/Library/src/MultiImageChooserActivity.java" target-dir="src/com/toshyodev"/>
 
         <source-file src="src/android/Library/res/anim/image_pop_in.xml" target-dir="res/anim"/>
         <source-file src="src/android/Library/res/drawable/grid_background.xml" target-dir="res/drawable"/>

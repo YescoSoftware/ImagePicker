@@ -3,19 +3,35 @@ cordova-imagePicker
 
 Cordova Plugin For Multiple Image Selection - implemented for iOS and Android 4.0 and above.
 
+## Note
+This plugn is forked from https://github.com/Telerik-Verified-Plugins/ImagePicker.git
+
+## What's different from the original plugin
+This plugin is customized for the specific case.
+This plugin picks images with additional information including geotag information and image taken time.
+
+The original plugin returns string array when call getPictures but it returns Object array which contains following format data.
+
+    {
+        image : 'Temporary image path or base64 data',
+        created_date : 'The date photo taken',
+        longitude : 'Longitude of the location photo taken',
+        latitude : 'Latitude of the location photo taken'
+    }
+
 ## Installing the plugin
 
 The plugin conforms to the Cordova plugin specification, it can be installed
 using the Cordova / Phonegap command line interface.
 
     # without desc
-    phonegap plugin add https://github.com/Telerik-Verified-Plugins/ImagePicker.git
-    cordova plugin add https://github.com/Telerik-Verified-Plugins/ImagePicker.git
+    phonegap plugin add https://github.com/mobilestar2015/ImagePicker.git
+    cordova plugin add https://github.com/mobilestar2015/ImagePicker.git
     
     # with desc
-    phonegap plugin add https://github.com/Telerik-Verified-Plugins/ImagePicker.git --variable PHOTO_LIBRARY_USAGE_DESCRIPTION="your usage message"
+    phonegap plugin add https://github.com/mobilestar2015/ImagePicker.git --variable PHOTO_LIBRARY_USAGE_DESCRIPTION="your usage message"
 
-    cordova plugin add https://github.com/Telerik-Verified-Plugins/ImagePicker.git --variable PHOTO_LIBRARY_USAGE_DESCRIPTION="your usage message"
+    cordova plugin add https://github.com/mobilestar2015/ImagePicker.git --variable PHOTO_LIBRARY_USAGE_DESCRIPTION="your usage message"
 
 
 ## Using the plugin
@@ -27,7 +43,10 @@ Example - Get Full Size Images (all default options):
 window.imagePicker.getPictures(
     function(results) {
         for (var i = 0; i < results.length; i++) {
-            console.log('Image URI: ' + results[i]);
+            console.log('Image URI: ' + results[i]["image"]);
+            console.log('Taken date : ' + results[i]["created_date"]);
+            console.log('latitude : ' + results[i]["latitude"]);
+            console.log('longitude : ' + results[i]["longitude"]);
         }
     }, function (error) {
         console.log('Error: ' + error);
@@ -40,7 +59,10 @@ Example - Get at most 10 images scaled to width of 800:
 window.imagePicker.getPictures(
     function(results) {
         for (var i = 0; i < results.length; i++) {
-            console.log('Image URI: ' + results[i]);
+            console.log('Image URI: ' + results[i]["image"]);
+            console.log('Taken date : ' + results[i]["created_date"]);
+            console.log('latitude : ' + results[i]["latitude"]);
+            console.log('longitude : ' + results[i]["longitude"]);
         }
     }, function (error) {
         console.log('Error: ' + error);

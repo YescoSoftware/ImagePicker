@@ -28,7 +28,7 @@
  *
  */
 
-package com.synconset;
+package com.toshyodev;
 
 import java.net.URI;
 import java.io.ByteArrayOutputStream;
@@ -36,6 +36,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -43,7 +45,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.synconset.FakeR;
+import com.toshyodev.FakeR;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.app.ProgressDialog;
@@ -58,6 +60,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.location.Location;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -567,7 +571,11 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
                     }
 
                     HashMap<String, String> item = new HashMap<String, String>();
-                    item.put("created_date", String.valueOf(file.lastModified()));
+                    Location geotag = readGeoTagFromImage(file.getAbsolutePath());
+                    item.put("latitude", String.valueOf(geotag.getLatitude()));
+                    item.put("longitude", String.valueOf(geotag.getLongitude()));
+                    item.put("created_date", String.valueOf(geotag.getTime()));
+
                     if (outputType == OutputType.FILE_URI) {
                         file = storeImage(bmp, file.getName());
                         item.put("image", Uri.fromFile(file).toString());
@@ -688,11 +696,31 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
             return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
         }
 
-       private String getBase64OfImage(Bitmap bm) {
+        private String getBase64OfImage(Bitmap bm) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             bm.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
             byte[] byteArray = byteArrayOutputStream.toByteArray();
             return Base64.encodeToString(byteArray, Base64.NO_WRAP);
+        }
+
+        private Location readGeoTagFromImage(String imagePath) {
+            Location loc = new Location("");
+            try {
+                ExifInterface exif = new ExifInterface(imagePath);
+                float[] latlong = new float[2];
+                if (exif.getLatLong(latlong)) {
+                    loc.setLatitude(latlong[0]);
+                    loc.setLongitude(latlong[1]);
+                }
+                String date = exif.getAttribute(ExifInterface.TAG_DATETIME);
+                SimpleDateFormat fmt_Exif = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+                loc.setTime(fmt_Exif.parse(date).getTime());
+            } catch (IOException ex){
+                ex.printStackTrace();
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+            }
+            return loc;
         }
     }
 

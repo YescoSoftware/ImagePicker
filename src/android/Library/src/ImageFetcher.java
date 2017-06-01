@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.synconset;
+package com.toshyodev;
 
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;

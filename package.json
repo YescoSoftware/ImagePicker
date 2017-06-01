@@ -1,0 +1,33 @@
+{
+  "name": "ToshyoImagePicker",
+  "version": "1.0.0",
+  "description": "\r\n        This plugin allows selection of multiple images from the camera roll / gallery in a phonegap app\r\n    ",
+  "cordova": {
+    "id": "com.toshyodev.imagepicker",
+    "platforms": [
+      "ios",
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mobilestar2015/ImagePicker.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-ios",
+    "cordova-android"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.5.0"
+    }
+  ],
+  "author": "Alex Piao",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mobilestar2015/ImagePicker/issues"
+  },
+  "homepage": "https://github.com/mobilestar2015/ImagePicker#readme"
+}
