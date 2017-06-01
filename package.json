@@ -1,5 +1,5 @@
 {
-  "name": "toshyo-imagepicker",
+  "name": "com.toshyodev.imagepicker",
   "version": "1.0.0",
   "description": "\r\n        This plugin allows selection of multiple images from the camera roll / gallery in a phonegap app\r\n    ",
   "cordova": {
