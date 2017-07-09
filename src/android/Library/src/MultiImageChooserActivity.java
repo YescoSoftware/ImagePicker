@@ -713,8 +713,13 @@ public class MultiImageChooserActivity extends AppCompatActivity implements
                     loc.setLongitude(latlong[1]);
                 }
                 String date = exif.getAttribute(ExifInterface.TAG_DATETIME);
-                SimpleDateFormat fmt_Exif = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
-                loc.setTime(fmt_Exif.parse(date).getTime());
+                if (date != null) {
+                    SimpleDateFormat fmt_Exif = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+                    loc.setTime(fmt_Exif.parse(date).getTime());
+                } else { // assume it's a image file not supported ExifInterface
+                    long lastModifiedDate = new File(imagePath).lastModified();
+                    loc.setTime(lastModifiedDate);
+                }
             } catch (IOException ex){
                 ex.printStackTrace();
             } catch (ParseException ex) {
