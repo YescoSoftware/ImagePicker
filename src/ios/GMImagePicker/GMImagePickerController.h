@@ -31,7 +31,7 @@ static CGSize const kPopoverContentSize = {480, 720};
  *  The assets picker’s delegate object.
  */
 @property (nonatomic, weak) id <GMImagePickerControllerDelegate> delegate;
-
+@property (nonatomic, assign) NSInteger maximumImagesCount;
 /**
  *  It contains the selected `PHAsset` objects. The order of the objects is the selection order.
  *
