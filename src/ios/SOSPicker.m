@@ -56,6 +56,7 @@ typedef enum : NSUInteger {
 
     NSDictionary *options = [command.arguments objectAtIndex: 0];
 
+    NSInteger maximumImagesCount = [[options objectForKey:@"maximumImagesCount"] integerValue];
     self.outputType = [[options objectForKey:@"outputType"] integerValue];
     BOOL allow_video = [[options objectForKey:@"allow_video" ] boolValue ];
     NSString * title = [options objectForKey:@"title"];
