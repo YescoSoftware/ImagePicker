@@ -122,8 +122,8 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
     PHFetchResult *topLevelUserCollections;// = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:options];
     //PHFetchResult *topLevelUserCollections = [PHCollectionList fetchTopLevelUserCollectionsWithOptions:nil];
     //PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
-    PHFetchResult *smartAlbums;// = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
-    self.collectionsFetchResults = @[topLevelUserCollections, smartAlbums];
+    PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
+    self.collectionsFetchResults = @[smartAlbums]; //@[topLevelUserCollections, smartAlbums];
     self.collectionsLocalizedTitles = @[NSLocalizedStringFromTable(@"picker.table.user-albums-header", @"GMImagePicker",@"Albums"), NSLocalizedStringFromTable(@"picker.table.smart-albums-header", @"GMImagePicker",@"Smart Albums")];
     
     [self updateFetchResults];
@@ -153,9 +153,11 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
     self.collectionsFetchResultsTitles=nil;
     
     //Fetch PHAssetCollections:
-    PHFetchResult *topLevelUserCollections = [self.collectionsFetchResults objectAtIndex:0];
-    PHFetchResult *smartAlbums = [self.collectionsFetchResults objectAtIndex:1];
-    
+    //old mjn when I wanted all albums
+    //PHFetchResult *topLevelUserCollections = [self.collectionsFetchResults objectAtIndex:0];
+    //PHFetchResult *smartAlbums = [self.collectionsFetchResults objectAtIndex:1];
+    //new mjn
+    PHFetchResult *smartAlbums = [self.collectionsFetchResults objectAtIndex:0];
     //All album: Sorted by descending creation date.
     NSMutableArray *allFetchResultArray = [[NSMutableArray alloc] init];
     NSMutableArray *allFetchResultLabel = [[NSMutableArray alloc] init];
@@ -169,6 +171,8 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
     //User albums:
     NSMutableArray *userFetchResultArray = [[NSMutableArray alloc] init];
     NSMutableArray *userFetchResultLabel = [[NSMutableArray alloc] init];
+    
+    /* commented mjn because I don't want user albums
     for(PHCollection *collection in topLevelUserCollections)
     {
         if ([collection isKindOfClass:[PHAssetCollection class]])
@@ -183,7 +187,7 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
             [userFetchResultArray addObject:assetsFetchResult];
             [userFetchResultLabel addObject:collection.localizedTitle];
         }
-    }
+    }*/
     
                                   
     //Smart albums: Sorted by descending creation date.
