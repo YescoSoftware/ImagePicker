@@ -30,7 +30,7 @@ public class ImagePicker extends CordovaPlugin {
     private static final String ACTION_REQUEST_READ_PERMISSION = "requestReadPermission";
 
     private static final int PERMISSION_REQUEST_CODE = 100;
-
+    private static final String TAG = "Cordova";
     private CallbackContext callbackContext;
 
     public boolean execute(String action, final JSONArray args, final CallbackContext callbackContext) throws JSONException {
@@ -77,12 +77,12 @@ public class ImagePicker extends CordovaPlugin {
             // some day, when everybody uses a cordova version supporting 'hasPermission', enable this:
             
             if (cordova != null) {
-                Log.i("Cordova","Cordova is defined");
+                Log.i(TAG,"Cordova is defined");
                  if (cordova.hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                     cordova.startActivityForResult(this, imagePickerIntent, 0);
-                    Log.i("Cordova","Has permission");
+                    Log.i(TAG,"Has permission");
                  } else {
-                     Log.i("Cordova","Needs permission");
+                     Log.i(TAG,"Needs permission");
                      cordova.requestPermission(
                              this,
                              PERMISSION_REQUEST_CODE,
