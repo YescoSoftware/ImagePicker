@@ -77,9 +77,12 @@ public class ImagePicker extends CordovaPlugin {
             // some day, when everybody uses a cordova version supporting 'hasPermission', enable this:
             
             if (cordova != null) {
+                Log.i("Cordova","Cordova is defined");
                  if (cordova.hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                     cordova.startActivityForResult(this, imagePickerIntent, 0);
+                    Log.i("Cordova","Has permission");
                  } else {
+                     Log.i("Cordova","Needs permission");
                      cordova.requestPermission(
                              this,
                              PERMISSION_REQUEST_CODE,
